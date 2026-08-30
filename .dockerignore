@@ -1,0 +1,7 @@
+.git
+.github
+*.md
+LICENSE
+.gitignore
+run-console.sh
+**/__pycache__

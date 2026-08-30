@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Local env / secrets — never commit
+.env
+*.local
+*.key
+*.pem
+
+# Build / runtime artifacts
+*.log
+.DS_Store
+Thumbs.db
+
+# Wordlists pulled at build time (image only, not repo)
+/usr/share/wordlists/

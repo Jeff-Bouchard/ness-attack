@@ -1,0 +1,3 @@
+ignored:
+  - DL3008   # tools box intentionally tracks latest apt versions
+  - DL3013   # same for pip

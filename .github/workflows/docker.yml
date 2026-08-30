@@ -1,0 +1,38 @@
+name: build
+
+on:
+  push:
+    branches: [ main, master ]
+    paths: [ 'Dockerfile', 'webui/**', '.github/workflows/docker.yml' ]
+  pull_request:
+    paths: [ 'Dockerfile', 'webui/**' ]
+  workflow_dispatch:
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Build the image. Does not push — this is a CI smoke test that the
+      # Dockerfile still builds and OpenSSL stays post-quantum-capable.
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: ness-attack:ci
+
+      - name: Verify post-quantum OpenSSL is present
+        run: |
+          docker run --rm ness-attack:ci \
+            sh -c 'openssl version && openssl list -kem-algorithms | grep -qi ml-kem'
+
+      - name: Web console imports cleanly
+        run: |
+          docker run --rm ness-attack:ci \
+            python3 -c 'import ast; ast.parse(open("/opt/ness-attack-webui/app.py").read()); print("app.py parses")'
